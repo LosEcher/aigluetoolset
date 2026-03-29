@@ -1,6 +1,6 @@
-import { buildTextBlockCacheKey } from './cache-key';
-import { normalizeInputText, splitWords } from './unicode';
-import type { MeasuredTextBlock, TextBlockInput, TextLine } from './types';
+import { buildTextBlockCacheKey } from './cache-key.js';
+import { normalizeInputText, splitWords } from './unicode.js';
+import type { MeasuredTextBlock, TextBlockInput, TextLine } from './types.js';
 
 function approximateCharWidth(input: TextBlockInput): number {
   const base = Math.max(1, input.fontSize);

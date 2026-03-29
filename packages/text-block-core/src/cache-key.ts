@@ -1,4 +1,4 @@
-import type { TextBlockInput } from './types';
+import type { TextBlockInput } from './types.js';
 
 export function buildTextBlockCacheKey(input: TextBlockInput): string {
   return JSON.stringify({

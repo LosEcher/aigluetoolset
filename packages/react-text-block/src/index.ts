@@ -1,3 +1,3 @@
-export { useMeasuredTextBlock } from './useMeasuredTextBlock';
-export { usePredictedRowHeight } from './usePredictedRowHeight';
-export { TextBlockDebugOverlay } from './TextBlockDebugOverlay';
+export { useMeasuredTextBlock } from './useMeasuredTextBlock.js';
+export { usePredictedRowHeight } from './usePredictedRowHeight.js';
+export { TextBlockDebugOverlay } from './TextBlockDebugOverlay.js';

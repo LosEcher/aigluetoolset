@@ -1,4 +1,4 @@
-export { SimpleLruMap } from './lru';
-export { predictBlockHeight } from './predict-height';
-export type { PredictedTextBlockHeight } from './predict-height';
-export { shouldInvalidatePrediction } from './invalidate';
+export { SimpleLruMap } from './lru.js';
+export { predictBlockHeight } from './predict-height.js';
+export type { PredictedTextBlockHeight } from './predict-height.js';
+export { shouldInvalidatePrediction } from './invalidate.js';

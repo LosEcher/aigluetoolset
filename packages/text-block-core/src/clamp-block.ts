@@ -1,5 +1,5 @@
-import { measureBlock } from './measure-block';
-import type { MeasuredTextBlock, TextBlockInput } from './types';
+import { measureBlock } from './measure-block.js';
+import type { MeasuredTextBlock, TextBlockInput } from './types.js';
 
 export function clampBlock(input: TextBlockInput): MeasuredTextBlock {
   const measured = measureBlock(input);

@@ -1,5 +1,5 @@
-export * from './types';
-export { buildTextBlockCacheKey } from './cache-key';
-export { measureBlock } from './measure-block';
-export { clampBlock } from './clamp-block';
-export { normalizeInputText, splitWords } from './unicode';
+export * from './types.js';
+export { buildTextBlockCacheKey } from './cache-key.js';
+export { measureBlock } from './measure-block.js';
+export { clampBlock } from './clamp-block.js';
+export { normalizeInputText, splitWords } from './unicode.js';
