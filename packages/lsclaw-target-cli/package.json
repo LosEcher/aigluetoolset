@@ -17,7 +17,7 @@
   "scripts": {
     "build": "pnpm --dir ../lsclaw-target-contract build && tsc -p tsconfig.json",
     "typecheck": "pnpm --dir ../lsclaw-target-contract build && tsc -p tsconfig.json --noEmit",
-    "test": "node --eval \"console.log('lsclaw-target-cli: no tests yet')\""
+    "test": "pnpm --dir ../lsclaw-target-contract build && tsc -p tsconfig.json && node --test ./test/*.test.mjs"
   },
   "dependencies": {
     "@aigluetoolset/lsclaw-target-contract": "workspace:*"

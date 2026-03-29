@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync, copyFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync, copyFileSync, realpathSync } from 'node:fs';
 import { basename, dirname, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -109,8 +109,22 @@ function timestampToken(): string {
   return `${yyyy}${mm}${dd}${hh}${mi}${ss}`;
 }
 
+function canonicalizePath(path: string): string {
+  const resolvedPath = resolve(path);
+  if (existsSync(resolvedPath)) {
+    return realpathSync(resolvedPath);
+  }
+  let parentPath = dirname(resolvedPath);
+  while (parentPath !== dirname(parentPath) && !existsSync(parentPath)) {
+    parentPath = dirname(parentPath);
+  }
+  const canonicalParent = existsSync(parentPath) ? realpathSync(parentPath) : parentPath;
+  const suffix = relative(parentPath, resolvedPath);
+  return suffix ? resolve(canonicalParent, suffix) : canonicalParent;
+}
+
 function isPathInside(rootPath: string, candidatePath: string): boolean {
-  const rel = relative(resolve(rootPath), resolve(candidatePath));
+  const rel = relative(canonicalizePath(rootPath), canonicalizePath(candidatePath));
   return rel === '' || (!rel.startsWith('..') && !rel.includes(`..${process.platform === 'win32' ? '\\' : '/'}`));
 }
 
