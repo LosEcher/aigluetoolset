@@ -92,6 +92,7 @@ The first repo-side orchestration packages are:
 `lsclaw-target-cli` safety baseline:
 
 - `init` scaffolds repo-local files under `.aigluetoolset/`
+- `freeze-slice` scaffolds a new repo-local slice JSON file and registers it in the manifest
 - `task-run` and `review-bundle` print to stdout unless `--output` is provided
 - `verify` runs slice verify commands inside the declared target repo and exits non-zero on failed checks
 - writes outside the repo root are blocked unless `--allow-outside-repo` is used

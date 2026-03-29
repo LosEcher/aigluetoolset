@@ -16,7 +16,7 @@
   "slices": {
     "text-block-v0": {
       "title": "text-block v0",
-      "path": ".aigluetoolset/slices/text-block-v0.md",
+      "path": ".aigluetoolset/slices/text-block-v0.json",
       "allowedScope": [
         "packages/text-block-core/src",
         "packages/text-block-predictor/src",

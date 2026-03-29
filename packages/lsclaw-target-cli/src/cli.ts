@@ -157,6 +157,14 @@ function summarizeCommandOutput(output: string): string {
   return normalized.join(' ').slice(0, 280);
 }
 
+function sanitizeSliceId(rawValue: string): string {
+  return String(rawValue ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 function loadManifestAndSlice(flags: ParsedArgs['flags'], repoRoot: string) {
   const manifestPath = resolve(getStringFlag(flags, 'manifest') || resolve(repoRoot, '.aigluetoolset/lsclaw-target.json'));
   const slicePath = resolve(getStringFlag(flags, 'slice') || resolve(repoRoot, '.aigluetoolset/slices/text-block-v0.json'));
@@ -180,6 +188,7 @@ function printUsage() {
 
 Commands:
   init            scaffold .aigluetoolset target files inside a repo
+  freeze-slice    scaffold a new slice file and register it in the manifest
   task-run        build a bounded /api/tasks/run payload from manifest + slice
   review-bundle   build a compact review bundle from a slice
   verify          run slice verify commands inside the target repo
@@ -232,6 +241,89 @@ function runInit(flags: ParsedArgs['flags']) {
         repoRoot,
         dryRun,
         files: [manifestWrite, sliceWrite],
+      },
+      null,
+      2
+    )
+  );
+}
+
+function runFreezeSlice(flags: ParsedArgs['flags']) {
+  const repoRoot = resolve(getStringFlag(flags, 'repo-root') || process.cwd());
+  const allowOutsideRepo = getBooleanFlag(flags, 'allow-outside-repo');
+  const force = getBooleanFlag(flags, 'force');
+  const dryRun = getBooleanFlag(flags, 'dry-run');
+  const templateRoot = resolveTemplateRoot();
+  const sliceTemplatePath = resolve(getStringFlag(flags, 'slice-template') || resolve(templateRoot, 'lsclaw-slice-contract.json'));
+  const manifestPath = resolve(getStringFlag(flags, 'manifest') || resolve(repoRoot, '.aigluetoolset/lsclaw-target.json'));
+  const sliceId = sanitizeSliceId(getStringFlag(flags, 'slice-id') || getStringFlag(flags, 'id'));
+  if (!sliceId) {
+    throw new Error('slice_id_required');
+  }
+  const title = getStringFlag(flags, 'title') || sliceId;
+  const objective = getStringFlag(flags, 'objective') || `Implement the frozen ${sliceId} contract without widening scope.`;
+  const sliceOutputPath = resolve(getStringFlag(flags, 'slice-path') || resolve(repoRoot, `.aigluetoolset/slices/${sliceId}.json`));
+
+  assertPathInsideRepo(repoRoot, manifestPath, allowOutsideRepo);
+  assertPathInsideRepo(repoRoot, sliceOutputPath, allowOutsideRepo);
+
+  const manifest = readJsonFile<LsclawTargetManifest>(manifestPath, 'manifest');
+  const manifestIssues = validateTargetManifest(manifest);
+  if (manifestIssues.length > 0) {
+    throw new Error(JSON.stringify({ manifestIssues }));
+  }
+  const slice = readJsonFile<LsclawSliceContract>(sliceTemplatePath, 'slice_template');
+  slice.sliceId = sliceId;
+  slice.repoId = manifest.repoId || basename(repoRoot);
+  slice.title = title;
+  slice.objective = objective;
+  slice.targetProjectPath = String(manifest.targetProjectPath ?? repoRoot).trim() || repoRoot;
+  const allowedScope = getStringListFlag(flags, 'allowed-scope');
+  const verifyCommands = getStringListFlag(flags, 'verify-command');
+  const nonGoals = getStringListFlag(flags, 'non-goal');
+  const stopConditions = getStringListFlag(flags, 'stop-condition');
+  if (allowedScope.length > 0) {
+    slice.allowedScope = allowedScope;
+  }
+  if (verifyCommands.length > 0) {
+    slice.verifyCommands = verifyCommands;
+  } else if (Array.isArray(manifest.verify?.defaultCommands) && manifest.verify.defaultCommands.length > 0) {
+    slice.verifyCommands = manifest.verify.defaultCommands;
+  }
+  if (nonGoals.length > 0) {
+    slice.nonGoals = nonGoals;
+  }
+  if (stopConditions.length > 0) {
+    slice.stopConditions = stopConditions;
+  }
+
+  const sliceIssues = validateSliceContract(slice);
+  if (sliceIssues.length > 0) {
+    throw new Error(JSON.stringify({ sliceIssues }));
+  }
+
+  const existingSlices = manifest.slices ?? {};
+  manifest.slices = {
+    ...existingSlices,
+    [sliceId]: {
+      title: slice.title ?? title,
+      path: relative(repoRoot, sliceOutputPath),
+      allowedScope: slice.allowedScope,
+      verifyCommands: slice.verifyCommands,
+    },
+  };
+
+  const sliceWrite = writeJsonAtomic(sliceOutputPath, slice, { force, dryRun });
+  const manifestWrite = writeJsonAtomic(manifestPath, manifest, { force: true, dryRun });
+  console.log(
+    JSON.stringify(
+      {
+        ok: true,
+        command: 'freeze-slice',
+        repoRoot,
+        dryRun,
+        sliceId,
+        files: [sliceWrite, manifestWrite],
       },
       null,
       2
@@ -383,6 +475,10 @@ export function runLsclawTargetCli(argv: string[]) {
   }
   if (parsed.command === 'init') {
     runInit(parsed.flags);
+    return;
+  }
+  if (parsed.command === 'freeze-slice') {
+    runFreezeSlice(parsed.flags);
     return;
   }
   if (parsed.command === 'task-run') {

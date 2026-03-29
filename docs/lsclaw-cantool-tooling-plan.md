@@ -221,6 +221,7 @@ pnpm aiglue lsclaw:verify text-block-v0
 Write safety and recovery baseline:
 
 - `init` writes only under repo-local `.aigluetoolset/`
+- `freeze-slice` writes a new repo-local slice JSON file and updates the manifest with a relative path entry
 - `task-run` and `review-bundle` default to stdout and only write files when `--output` is explicit
 - `verify` executes inside the declared `targetProjectPath` and returns structured pass/fail results
 - output paths outside the repo root are blocked unless the operator passes `--allow-outside-repo`
