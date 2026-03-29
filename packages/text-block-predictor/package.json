@@ -17,6 +17,6 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --eval \"console.log('text-block-predictor: no tests yet')\""
+    "test": "tsc -p tsconfig.json && node --test ./test/*.test.mjs"
   }
 }
