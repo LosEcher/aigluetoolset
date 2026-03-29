@@ -55,6 +55,7 @@ Current implementation status:
 - `packages/lsclaw-target-cli` currently supports `init`, `freeze-slice`, `task-run`, `review-bundle`, and `verify`
 - `packages/palette-core` is now the first landed `cantool` extraction target
 - `packages/list-interaction-core` now carries headless selected-index and IME-safe key intent primitives from `cantool`
+- `packages/react-list-interaction` now provides the thin React hook adapter over `list-interaction-core`
 
 This is primarily **product runtime extraction**, not orchestration tooling.
 
