@@ -58,6 +58,7 @@ Current implementation status:
 - `packages/react-list-interaction` now provides the thin React hook adapter over `list-interaction-core`
 - `packages/native-command-bridge-core` now provides the headless invoke/subscribe/error contract extracted from `cantool`'s frontend bridge layer
 - later `tauri-command-bridge` remains deferred until `cantool` structure cleanup settles enough to freeze the product-specific adapter edge
+- the current blockers before that next package are frozen in `docs/cantool-pre-extraction-gates.md`
 
 This is primarily **product runtime extraction**, not orchestration tooling.
 
