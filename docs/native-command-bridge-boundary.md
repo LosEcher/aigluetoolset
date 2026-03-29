@@ -5,6 +5,11 @@
 Define the extraction boundary for a future `native-command-bridge-core`
 without starting the package too early.
 
+Current status:
+
+- `packages/native-command-bridge-core` is now landed as the headless invoke/subscribe/error contract
+- product-specific Tauri wiring is still intentionally left out of the extracted package family
+
 This document exists so `cantool` structure cleanup and package extraction can proceed separately:
 
 - `cantool` can continue refining its local folder layout and product wiring
@@ -94,7 +99,7 @@ Those belong in:
 
 When extraction starts, prefer:
 
-1. `packages/native-command-bridge-core`
+1. `packages/native-command-bridge-core` ✅
 2. later `packages/tauri-command-bridge`
 3. later `packages/react-native-command-bridge`
 

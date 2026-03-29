@@ -56,7 +56,8 @@ Current implementation status:
 - `packages/palette-core` is now the first landed `cantool` extraction target
 - `packages/list-interaction-core` now carries headless selected-index and IME-safe key intent primitives from `cantool`
 - `packages/react-list-interaction` now provides the thin React hook adapter over `list-interaction-core`
-- `native-command-bridge-core` is intentionally deferred until `cantool` structure cleanup finishes and the reusable bridge boundary is frozen
+- `packages/native-command-bridge-core` now provides the headless invoke/subscribe/error contract extracted from `cantool`'s frontend bridge layer
+- later `tauri-command-bridge` remains deferred until `cantool` structure cleanup settles enough to freeze the product-specific adapter edge
 
 This is primarily **product runtime extraction**, not orchestration tooling.
 

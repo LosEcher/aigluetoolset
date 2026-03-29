@@ -50,6 +50,7 @@ packages/
   palette-core/
   list-interaction-core/
   react-list-interaction/
+  native-command-bridge-core/
   text-block-core/
   text-block-predictor/
   react-text-block/
@@ -101,6 +102,7 @@ The first `cantool` extraction package is:
 - [packages/palette-core](/Users/echerlos/Downloads/projects/aigluetoolset/packages/palette-core)
 - [packages/list-interaction-core](/Users/echerlos/Downloads/projects/aigluetoolset/packages/list-interaction-core)
 - [packages/react-list-interaction](/Users/echerlos/Downloads/projects/aigluetoolset/packages/react-list-interaction)
+- [packages/native-command-bridge-core](/Users/echerlos/Downloads/projects/aigluetoolset/packages/native-command-bridge-core)
 
 Minimal usage:
 
@@ -121,6 +123,7 @@ Runnable examples:
 
 - [examples/command-palette-demo/demo.mjs](/Users/echerlos/Downloads/projects/aigluetoolset/examples/command-palette-demo/demo.mjs)
 - [examples/lsclaw-target-demo/run-demo.mjs](/Users/echerlos/Downloads/projects/aigluetoolset/examples/lsclaw-target-demo/run-demo.mjs)
+- [examples/native-command-bridge-demo/demo.mjs](/Users/echerlos/Downloads/projects/aigluetoolset/examples/native-command-bridge-demo/demo.mjs)
 
 Current maturity:
 
@@ -133,7 +136,9 @@ Current maturity:
 - `list-interaction-core`
   - tests cover navigation clamps, keyboard intent derivation, and editable-target guards
 - `react-list-interaction`
-  - currently build/typecheck covered; richer hook/runtime tests are still pending
+  - build/typecheck and hook/runtime tests are covered
+- `native-command-bridge-core`
+  - tests cover invoke success, timeout, retry behavior, subscription lifecycle, and normalized error mapping
 
 `lsclaw-target-cli` safety baseline:
 
