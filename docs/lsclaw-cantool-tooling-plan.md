@@ -49,6 +49,12 @@ Recommended extraction order:
 5. later: `react-panel-shell`
 6. later: `tool-card-core`
 
+Current implementation status:
+
+- `packages/lsclaw-target-contract` is in place
+- `packages/lsclaw-target-cli` currently supports `init`, `freeze-slice`, `task-run`, `review-bundle`, and `verify`
+- `packages/palette-core` is now the first landed `cantool` extraction target
+
 This is primarily **product runtime extraction**, not orchestration tooling.
 
 ## Principle: Keep The Two Tracks Separate
