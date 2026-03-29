@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync, copyFileSync } from 'node:fs';
 import { basename, dirname, relative, resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
   buildLsclawReviewBundle,
@@ -144,6 +145,36 @@ function writeJsonAtomic(path: string, payload: unknown, options: { force: boole
   return { outputPath: targetPath, backupPath, wrote: true };
 }
 
+function summarizeCommandOutput(output: string): string {
+  const normalized = String(output ?? '')
+    .replace(/\r\n/g, '\n')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+  if (normalized.length === 0) {
+    return '';
+  }
+  return normalized.join(' ').slice(0, 280);
+}
+
+function loadManifestAndSlice(flags: ParsedArgs['flags'], repoRoot: string) {
+  const manifestPath = resolve(getStringFlag(flags, 'manifest') || resolve(repoRoot, '.aigluetoolset/lsclaw-target.json'));
+  const slicePath = resolve(getStringFlag(flags, 'slice') || resolve(repoRoot, '.aigluetoolset/slices/text-block-v0.json'));
+  const manifest = readJsonFile<LsclawTargetManifest>(manifestPath, 'manifest');
+  const slice = readJsonFile<LsclawSliceContract>(slicePath, 'slice');
+  const manifestIssues = validateTargetManifest(manifest);
+  const sliceIssues = validateSliceContract(slice);
+  if (manifestIssues.length > 0 || sliceIssues.length > 0) {
+    throw new Error(
+      JSON.stringify({
+        manifestIssues,
+        sliceIssues,
+      })
+    );
+  }
+  return { manifestPath, slicePath, manifest, slice };
+}
+
 function printUsage() {
   console.log(`Usage: aiglue-lsclaw-target <command> [options]
 
@@ -151,6 +182,7 @@ Commands:
   init            scaffold .aigluetoolset target files inside a repo
   task-run        build a bounded /api/tasks/run payload from manifest + slice
   review-bundle   build a compact review bundle from a slice
+  verify          run slice verify commands inside the target repo
 
 Common safety rules:
   - writes are repo-local by default
@@ -212,22 +244,8 @@ function runTaskRun(flags: ParsedArgs['flags']) {
   const allowOutsideRepo = getBooleanFlag(flags, 'allow-outside-repo');
   const force = getBooleanFlag(flags, 'force');
   const dryRun = getBooleanFlag(flags, 'dry-run');
-  const manifestPath = resolve(getStringFlag(flags, 'manifest') || resolve(repoRoot, '.aigluetoolset/lsclaw-target.json'));
-  const slicePath = resolve(getStringFlag(flags, 'slice') || resolve(repoRoot, '.aigluetoolset/slices/text-block-v0.json'));
   const outputPath = getStringFlag(flags, 'output');
-
-  const manifest = readJsonFile<LsclawTargetManifest>(manifestPath, 'manifest');
-  const slice = readJsonFile<LsclawSliceContract>(slicePath, 'slice');
-  const manifestIssues = validateTargetManifest(manifest);
-  const sliceIssues = validateSliceContract(slice);
-  if (manifestIssues.length > 0 || sliceIssues.length > 0) {
-    throw new Error(
-      JSON.stringify({
-        manifestIssues,
-        sliceIssues,
-      })
-    );
-  }
+  const { manifest, slice } = loadManifestAndSlice(flags, repoRoot);
   const payload = buildLsclawTaskRunPayload({
     manifest,
     slice,
@@ -257,17 +275,11 @@ function runReviewBundle(flags: ParsedArgs['flags']) {
   const allowOutsideRepo = getBooleanFlag(flags, 'allow-outside-repo');
   const force = getBooleanFlag(flags, 'force');
   const dryRun = getBooleanFlag(flags, 'dry-run');
-  const slicePath = resolve(getStringFlag(flags, 'slice') || resolve(repoRoot, '.aigluetoolset/slices/text-block-v0.json'));
   const outputPath = getStringFlag(flags, 'output');
   const verifyResultsPath = getStringFlag(flags, 'verify-results');
   const findingsPath = getStringFlag(flags, 'findings');
   const notesPath = getStringFlag(flags, 'notes');
-
-  const slice = readJsonFile<LsclawSliceContract>(slicePath, 'slice');
-  const sliceIssues = validateSliceContract(slice);
-  if (sliceIssues.length > 0) {
-    throw new Error(JSON.stringify({ sliceIssues }));
-  }
+  const { slice } = loadManifestAndSlice(flags, repoRoot);
   const verifyResults =
     verifyResultsPath ? readJsonFile<BuildLsclawReviewBundleOptions['verifyResults']>(resolve(verifyResultsPath), 'verify_results') : [];
   const findings = findingsPath ? readJsonFile<string[]>(resolve(findingsPath), 'findings') : [];
@@ -290,6 +302,79 @@ function runReviewBundle(flags: ParsedArgs['flags']) {
   console.log(JSON.stringify({ ok: true, command: 'review-bundle', dryRun, bundle, writeResult }, null, 2));
 }
 
+function runVerify(flags: ParsedArgs['flags']) {
+  const repoRoot = resolve(getStringFlag(flags, 'repo-root') || process.cwd());
+  const allowOutsideRepo = getBooleanFlag(flags, 'allow-outside-repo');
+  const force = getBooleanFlag(flags, 'force');
+  const dryRun = getBooleanFlag(flags, 'dry-run');
+  const outputPath = getStringFlag(flags, 'output');
+  const failFast = getBooleanFlag(flags, 'fail-fast');
+  const shellPath = getStringFlag(flags, 'shell') || '/bin/bash';
+  const extraCommands = getStringListFlag(flags, 'command', 'verify-command');
+  const { manifest, slice } = loadManifestAndSlice(flags, repoRoot);
+
+  const targetProjectPath = resolve(String(slice.targetProjectPath ?? manifest.targetProjectPath ?? repoRoot).trim() || repoRoot);
+  assertPathInsideRepo(repoRoot, targetProjectPath, allowOutsideRepo);
+  if (!existsSync(targetProjectPath)) {
+    throw new Error(`target_project_path_not_found:${targetProjectPath}`);
+  }
+
+  const commands = extraCommands.length > 0 ? extraCommands : (slice.verifyCommands.length > 0 ? slice.verifyCommands : manifest.verify.defaultCommands);
+  if (commands.length === 0) {
+    throw new Error('verify_commands_missing');
+  }
+
+  const verifyResults: NonNullable<BuildLsclawReviewBundleOptions['verifyResults']> = [];
+  for (const command of commands) {
+    if (dryRun) {
+      verifyResults.push({
+        command,
+        status: 'skipped',
+        summary: `dry-run: would execute in ${targetProjectPath}`,
+      });
+      continue;
+    }
+    const result = spawnSync(shellPath, ['-lc', command], {
+      cwd: targetProjectPath,
+      encoding: 'utf-8',
+    });
+    const combined = `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
+    const summary = summarizeCommandOutput(combined) || `exit ${result.status ?? 1}`;
+    if (result.status === 0) {
+      verifyResults.push({ command, status: 'passed', summary });
+      continue;
+    }
+    verifyResults.push({ command, status: 'failed', summary });
+    if (failFast) {
+      break;
+    }
+  }
+
+  const failed = verifyResults.some((item) => item.status === 'failed');
+  const payload = {
+    ok: !failed,
+    command: 'verify',
+    dryRun,
+    targetProjectPath,
+    verifyResults,
+  };
+
+  if (!outputPath) {
+    console.log(JSON.stringify(payload, null, 2));
+    if (failed) {
+      process.exitCode = 1;
+    }
+    return;
+  }
+  const resolvedOutput = resolve(outputPath);
+  assertPathInsideRepo(repoRoot, resolvedOutput, allowOutsideRepo);
+  const writeResult = writeJsonAtomic(resolvedOutput, payload, { force, dryRun });
+  console.log(JSON.stringify({ ...payload, writeResult }, null, 2));
+  if (failed) {
+    process.exitCode = 1;
+  }
+}
+
 export function runLsclawTargetCli(argv: string[]) {
   const parsed = parseArgs(argv);
   if (!parsed.command || getBooleanFlag(parsed.flags, 'help', 'h')) {
@@ -306,6 +391,10 @@ export function runLsclawTargetCli(argv: string[]) {
   }
   if (parsed.command === 'review-bundle') {
     runReviewBundle(parsed.flags);
+    return;
+  }
+  if (parsed.command === 'verify') {
+    runVerify(parsed.flags);
     return;
   }
   throw new Error(`unknown_command:${parsed.command}`);

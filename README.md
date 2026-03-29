@@ -93,6 +93,7 @@ The first repo-side orchestration packages are:
 
 - `init` scaffolds repo-local files under `.aigluetoolset/`
 - `task-run` and `review-bundle` print to stdout unless `--output` is provided
+- `verify` runs slice verify commands inside the declared target repo and exits non-zero on failed checks
 - writes outside the repo root are blocked unless `--allow-outside-repo` is used
 - existing outputs require `--force`, and overwrite writes keep a timestamped `.bak-*` recovery copy
 - temp write files are cleaned automatically; recovery backups are intentionally retained until the operator deletes them
