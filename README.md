@@ -48,6 +48,7 @@ The first target is the missing middle layer between CSS-only text presentation 
 ```text
 packages/
   palette-core/
+  list-interaction-core/
   text-block-core/
   text-block-predictor/
   react-text-block/
@@ -93,6 +94,7 @@ The first repo-side orchestration packages are:
 The first `cantool` extraction package is:
 
 - [packages/palette-core](/Users/echerlos/Downloads/projects/aigluetoolset/packages/palette-core)
+- [packages/list-interaction-core](/Users/echerlos/Downloads/projects/aigluetoolset/packages/list-interaction-core)
 
 `lsclaw-target-cli` safety baseline:
 
