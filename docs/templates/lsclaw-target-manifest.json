@@ -1,0 +1,32 @@
+{
+  "schema": "aigluetoolset.lsclaw-target.v1",
+  "repoId": "aigluetoolset",
+  "defaultPlanId": "kimi-implement-codex-review",
+  "targetProjectPath": "/abs/path/to/aigluetoolset",
+  "planPath": "/abs/path/to/lsclaw/control-plane/config/agent-team-kimi-implement-codex-review.json",
+  "defaultDispatchMode": "queue",
+  "defaultTaskMode": "team",
+  "defaultAgentName": "opencode",
+  "verify": {
+    "defaultCommands": [
+      "pnpm typecheck",
+      "pnpm test"
+    ]
+  },
+  "slices": {
+    "text-block-v0": {
+      "title": "text-block v0",
+      "path": ".aigluetoolset/slices/text-block-v0.md",
+      "allowedScope": [
+        "packages/text-block-core/src",
+        "packages/text-block-predictor/src",
+        "packages/react-text-block/src",
+        "docs"
+      ],
+      "verifyCommands": [
+        "pnpm typecheck",
+        "pnpm test"
+      ]
+    }
+  }
+}

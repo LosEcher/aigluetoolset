@@ -1,0 +1,9 @@
+{
+  "mode": "team",
+  "dispatchMode": "queue",
+  "agentName": "opencode",
+  "planPath": "<lsclaw-path>/control-plane/config/agent-team-kimi-implement-codex-review.json",
+  "ownerRepo": "aigluetoolset",
+  "targetProjectPath": "<aigluetoolset-path>",
+  "task": "Implement the frozen aigluetoolset v0 contract only: create or refine the workspace scaffold, package skeletons, public type contracts, and docs for measureBlock, clampBlock, and predictBlockHeight. Do not widen into caret, selection, hit-testing, editor abstractions, SSR fidelity, or Node rendering parity. Stay inside this repo. Review is owned by Codex; the writer lane should not self-accept widened scope."
+}

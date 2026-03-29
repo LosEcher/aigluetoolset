@@ -1,0 +1,130 @@
+{
+  "schema": "lsclaw.hub-lite.parent-epic.v1",
+  "parentEpic": {
+    "title": "aigluetoolset Adoption Round",
+    "tenantId": "default",
+    "sessionId": "parent-epic-<timestamp>",
+    "traceId": "trace-parent-epic-<timestamp>",
+    "parentTaskId": "epic-<timestamp>",
+    "ownerRepo": "lsclaw",
+    "dispatchMode": "queue",
+    "objective": "Coordinate one narrow adoption round for aigluetoolset without widening beyond text block measurement, clamp, and height prediction.",
+    "successCriteria": [
+      "aigluetoolset keeps a narrow core contract.",
+      "lsclaw adopts one narrow workflow/thread surface.",
+      "vpsagentweb adopts one narrow logs preview surface.",
+      "No repo widens into editor or interaction primitives."
+    ],
+    "nonGoals": [
+      "No caret/selection/hit-testing rollout.",
+      "No server-side fidelity work.",
+      "No cross-repo free-form contract negotiation."
+    ],
+    "frozenContract": {
+      "problemStatement": "Adopt a narrow headless text block toolkit across selected product surfaces without widening the initial contract.",
+      "interfaceConstraints": [
+        "Public package scope remains measureBlock, clampBlock, and predictBlockHeight.",
+        "Each child edits only its own repo.",
+        "Cross-repo contract drift must be escalated to the parent session."
+      ],
+      "acceptanceCriteria": [
+        "The shared package contract remains narrow and documented.",
+        "Each child records repo-local verification or blocker state.",
+        "The parent records final acceptance state and next narrow follow-up."
+      ],
+      "sharedArtifacts": [
+        "<aigluetoolset-path>/docs/mvp-contract.md",
+        "<aigluetoolset-path>/docs/architecture.md",
+        "<aigluetoolset-path>/docs/adoption-plan.md"
+      ],
+      "blockedBy": [],
+      "notes": [
+        "Freeze before dispatch.",
+        "Prefer Kimi for implementation and Codex for review/closeout."
+      ]
+    }
+  },
+  "childSessions": [
+    {
+      "ownerRepo": "aigluetoolset",
+      "sessionId": "child-aigluetoolset-<timestamp>",
+      "childTaskId": "aigluetoolset-<timestamp>",
+      "targetProjectPath": "<aigluetoolset-path>",
+      "mode": "team",
+      "dispatchMode": "queue",
+      "task": {
+        "repoGoal": "Implement or refine the narrow public package contract only.",
+        "allowedScope": [
+          "AGENTS.md",
+          "README.md",
+          "package.json",
+          "pnpm-workspace.yaml",
+          "tsconfig.base.json",
+          "docs/**",
+          "packages/**",
+          "examples/**"
+        ],
+        "expectedArtifacts": [
+          "package/API updates",
+          "docs update",
+          "short verification note"
+        ],
+        "verification": [
+          "match package exports to docs/mvp-contract.md"
+        ],
+        "blockerPolicy": [
+          "Stop if the work requires editor or interaction primitives."
+        ]
+      }
+    },
+    {
+      "ownerRepo": "lsclaw",
+      "sessionId": "child-lsclaw-<timestamp>",
+      "childTaskId": "lsclaw-<timestamp>",
+      "targetProjectPath": "<lsclaw-path>",
+      "mode": "team",
+      "dispatchMode": "queue",
+      "task": {
+        "repoGoal": "Adopt one narrow workflow/thread surface using the frozen aigluetoolset contract.",
+        "allowedScope": [
+          "control-plane/src/admin/app/components/workflow/**",
+          "control-plane/src/admin/app/components/chat/thread-list/**"
+        ],
+        "expectedArtifacts": [
+          "one narrow UI integration",
+          "verification note or blocker summary"
+        ],
+        "verification": [
+          "repo-local render or surface verification"
+        ],
+        "blockerPolicy": [
+          "Do not change aigluetoolset public API directly; escalate drift to the parent."
+        ]
+      }
+    },
+    {
+      "ownerRepo": "vpsagentweb",
+      "sessionId": "child-vpsagentweb-<timestamp>",
+      "childTaskId": "vpsagentweb-<timestamp>",
+      "targetProjectPath": "<vpsagentweb-path>",
+      "mode": "team",
+      "dispatchMode": "queue",
+      "task": {
+        "repoGoal": "Adopt one narrow logs preview surface using the frozen aigluetoolset contract.",
+        "allowedScope": [
+          "apps/web/src/pages/Logs/**"
+        ],
+        "expectedArtifacts": [
+          "one narrow UI integration",
+          "verification note or blocker summary"
+        ],
+        "verification": [
+          "repo-local web build or equivalent narrow check"
+        ],
+        "blockerPolicy": [
+          "Do not widen into generalized rich text rendering."
+        ]
+      }
+    }
+  ]
+}

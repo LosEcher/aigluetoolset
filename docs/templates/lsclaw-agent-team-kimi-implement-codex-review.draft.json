@@ -1,0 +1,95 @@
+{
+  "executionPolicy": {
+    "mode": "balanced"
+  },
+  "stages": [
+    {
+      "id": "research",
+      "role": "research",
+      "agent": "claude",
+      "goal": "Freeze the local scope, constraints, and adoption surface for the current aigluetoolset slice without editing files. Keep discovery narrow and stop if the task tries to widen into editor or interaction primitives.",
+      "timeoutMs": 120000,
+      "maxSilenceMs": 30000,
+      "next": "solution-design"
+    },
+    {
+      "id": "solution-design",
+      "role": "planner",
+      "agent": "claude",
+      "goal": "Turn the frozen scope into an implementation-oriented design with explicit package boundaries, verification targets, and rollback notes. Do not edit files.",
+      "timeoutMs": 180000,
+      "maxSilenceMs": 45000,
+      "next": "research-report"
+    },
+    {
+      "id": "research-report",
+      "role": "research",
+      "agent": "claude",
+      "goal": "Produce a structured implementation handoff for the writer lane: exact files, explicit public API expectations, non-goals, and focused verification. Do not edit files.",
+      "timeoutMs": 240000,
+      "maxSilenceMs": 60000,
+      "next": "implementation-kimi"
+    },
+    {
+      "id": "implementation-kimi",
+      "role": "writer",
+      "agent": "opencode",
+      "goal": "Implement the frozen aigluetoolset slice with Kimi coding plan, keep the change set narrow, and run only the focused checks required by the handoff.",
+      "timeoutMs": 420000,
+      "maxSilenceMs": 60000,
+      "runningLongMs": 240000,
+      "cli": {
+        "opencodeDir": ".",
+        "opencodeModel": "kimi-for-coding/k2p5"
+      },
+      "next": "review"
+    },
+    {
+      "id": "review",
+      "role": "reviewer",
+      "agent": "codex",
+      "goal": "Review the Kimi implementation for bugs, regressions, public API drift, scope widening, and missing verification. Findings must stay focused on the current aigluetoolset slice.",
+      "timeoutMs": 240000,
+      "maxSilenceMs": 45000,
+      "runningLongMs": 150000,
+      "cli": {
+        "codexApprovalPolicy": "never"
+      },
+      "next": "dynamic",
+      "handoffFunctions": [
+        "routeToFixKimi",
+        "routeToComplete"
+      ]
+    },
+    {
+      "id": "fix-kimi",
+      "role": "writer",
+      "agent": "opencode",
+      "goal": "Fix Codex review findings with the same Kimi coding plan, rerun focused checks, and return to review without widening scope.",
+      "timeoutMs": 420000,
+      "maxSilenceMs": 60000,
+      "runningLongMs": 240000,
+      "cli": {
+        "opencodeDir": ".",
+        "opencodeModel": "kimi-for-coding/k2p5"
+      },
+      "next": "review"
+    },
+    {
+      "id": "final-plan",
+      "role": "planner",
+      "agent": "codex",
+      "goal": "Close the round with acceptance state, residual risks, and the next narrow slice. Do not reopen broad research."
+    }
+  ],
+  "handoffs": {
+    "routeToFixKimi": {
+      "target": "fix-kimi",
+      "condition": "issues_found"
+    },
+    "routeToComplete": {
+      "target": "final-plan",
+      "condition": "approved"
+    }
+  }
+}

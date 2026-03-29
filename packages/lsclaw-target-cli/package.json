@@ -1,0 +1,25 @@
+{
+  "name": "@aigluetoolset/lsclaw-target-cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "aiglue-lsclaw-target": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "npm --prefix ../lsclaw-target-contract run build && tsc -p tsconfig.json",
+    "typecheck": "npm --prefix ../lsclaw-target-contract run build && tsc -p tsconfig.json --noEmit",
+    "test": "node --eval \"console.log('lsclaw-target-cli: no tests yet')\""
+  },
+  "dependencies": {
+    "@aigluetoolset/lsclaw-target-contract": "workspace:*"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "aigluetoolset.lsclaw-slice.v1",
+  "sliceId": "text-block-v0",
+  "repoId": "aigluetoolset",
+  "title": "text-block v0 narrow implementation slice",
+  "objective": "Implement the frozen text-block v0 contract without widening into editor, caret, SSR, or canvas renderer scope.",
+  "allowedScope": [
+    "packages/text-block-core/src",
+    "packages/text-block-predictor/src",
+    "packages/react-text-block/src",
+    "docs"
+  ],
+  "verifyCommands": [
+    "pnpm typecheck",
+    "pnpm test"
+  ],
+  "expectedArtifacts": [
+    "package source changes",
+    "updated docs if public contract changes"
+  ],
+  "nonGoals": [
+    "caret / selection / hit-testing",
+    "SSR fidelity",
+    "cross-repo adoption work"
+  ],
+  "stopConditions": [
+    "Do not widen into sibling runtime/tooling packages.",
+    "Stop and report if the requested work requires changing the frozen scope."
+  ],
+  "reviewOwner": "codex"
+}
