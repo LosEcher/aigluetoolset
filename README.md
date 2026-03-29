@@ -98,6 +98,34 @@ The first `cantool` extraction package is:
 - [packages/list-interaction-core](/Users/echerlos/Downloads/projects/aigluetoolset/packages/list-interaction-core)
 - [packages/react-list-interaction](/Users/echerlos/Downloads/projects/aigluetoolset/packages/react-list-interaction)
 
+Minimal usage:
+
+```ts
+import { composeCommands, filterCommands, sortCommandsByUsage } from '@aigluetoolset/palette-core';
+import { deriveListKeyIntent, moveSelectedIndex } from '@aigluetoolset/list-interaction-core';
+
+const commands = composeCommands([
+  { sourceId: 'builtin', items: [{ id: 'open-settings', name: 'Open Settings' }] },
+]);
+
+const visible = sortCommandsByUsage(filterCommands(commands, 'settings'));
+const intent = deriveListKeyIntent('ArrowDown');
+const nextIndex = intent.kind === 'navigate' ? moveSelectedIndex(0, visible.length, intent.action) : 0;
+```
+
+Current maturity:
+
+- `lsclaw-target-contract`
+  - schema/builder tests cover manifest validation, task payload generation, and review bundle output
+- `lsclaw-target-cli`
+  - tests cover repo-local init, slice freezing, verify failures, and outside-repo write blocking
+- `palette-core`
+  - tests cover command composition, fuzzy filtering, ranking, and usage cleanup
+- `list-interaction-core`
+  - tests cover navigation clamps, keyboard intent derivation, and editable-target guards
+- `react-list-interaction`
+  - currently build/typecheck covered; richer hook/runtime tests are still pending
+
 `lsclaw-target-cli` safety baseline:
 
 - `init` scaffolds repo-local files under `.aigluetoolset/`
