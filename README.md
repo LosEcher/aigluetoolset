@@ -56,6 +56,8 @@ packages/
   lsclaw-target-contract/
   lsclaw-target-cli/
 examples/
+  command-palette-demo/
+  lsclaw-target-demo/
   logs-table-demo/
   workflow-node-demo/
   thread-list-demo/
@@ -112,6 +114,11 @@ const visible = sortCommandsByUsage(filterCommands(commands, 'settings'));
 const intent = deriveListKeyIntent('ArrowDown');
 const nextIndex = intent.kind === 'navigate' ? moveSelectedIndex(0, visible.length, intent.action) : 0;
 ```
+
+Runnable examples:
+
+- [examples/command-palette-demo/demo.mjs](/Users/echerlos/Downloads/projects/aigluetoolset/examples/command-palette-demo/demo.mjs)
+- [examples/lsclaw-target-demo/run-demo.mjs](/Users/echerlos/Downloads/projects/aigluetoolset/examples/lsclaw-target-demo/run-demo.mjs)
 
 Current maturity:
 
