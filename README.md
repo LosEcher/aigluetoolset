@@ -86,6 +86,7 @@ Install guidance is in [docs/lsclaw-plan-installation.md](/Users/echerlos/Downlo
 `cantool` extraction analysis is in [docs/cantool-extraction-notes.md](/Users/echerlos/Downloads/projects/aigluetoolset/docs/cantool-extraction-notes.md).
 Combined `lsclaw × cantool` tooling direction is in [docs/lsclaw-cantool-tooling-plan.md](/Users/echerlos/Downloads/projects/aigluetoolset/docs/lsclaw-cantool-tooling-plan.md).
 The planned boundary for the next `cantool` extraction package is in [docs/native-command-bridge-boundary.md](/Users/echerlos/Downloads/projects/aigluetoolset/docs/native-command-bridge-boundary.md).
+The concrete adoption order back into `cantool` is in [docs/cantool-bridge-adoption-sequence.md](/Users/echerlos/Downloads/projects/aigluetoolset/docs/cantool-bridge-adoption-sequence.md).
 React test-harness follow-up is tracked in [docs/react-test-stack-plan.md](/Users/echerlos/Downloads/projects/aigluetoolset/docs/react-test-stack-plan.md).
 Target-repo manifest and slice templates live in:
 
