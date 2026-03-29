@@ -44,13 +44,23 @@ importers:
 
   packages/react-text-block:
     dependencies:
+      '@aigluetoolset/text-block-core':
+        specifier: workspace:*
+        version: link:../text-block-core
+      '@aigluetoolset/text-block-predictor':
+        specifier: workspace:*
+        version: link:../text-block-predictor
       react:
         specifier: ^19.0.0
         version: 19.2.4
 
   packages/text-block-core: {}
 
-  packages/text-block-predictor: {}
+  packages/text-block-predictor:
+    dependencies:
+      '@aigluetoolset/text-block-core':
+        specifier: workspace:*
+        version: link:../text-block-core
 
 packages:
 
