@@ -56,6 +56,7 @@ Current implementation status:
 - `packages/palette-core` is now the first landed `cantool` extraction target
 - `packages/list-interaction-core` now carries headless selected-index and IME-safe key intent primitives from `cantool`
 - `packages/react-list-interaction` now provides the thin React hook adapter over `list-interaction-core`
+- `native-command-bridge-core` is intentionally deferred until `cantool` structure cleanup finishes and the reusable bridge boundary is frozen
 
 This is primarily **product runtime extraction**, not orchestration tooling.
 
@@ -254,6 +255,20 @@ That is enough to support:
 - target repo scaffolding
 - Kimi implementation rounds
 - Codex review rounds
+
+## Current Gate Before The Next CanTool Package
+
+Do not immediately start `native-command-bridge-core`.
+
+The next package is blocked by two prep tasks:
+
+1. freeze the bridge extraction boundary
+2. keep React-facing package testing on a consistent path
+
+See:
+
+- `docs/native-command-bridge-boundary.md`
+- `docs/react-test-stack-plan.md`
 
 ## What Should Stay In lsclaw, Not In aigluetoolset
 
