@@ -144,3 +144,16 @@ Freeze these rules before dispatch:
 - no caret/selection/editor scope
 - browser-first only
 - no SSR guarantees
+
+## Repo-Local Contract Baseline
+
+The target repo now carries a checked-in `lsclaw` contract:
+
+- [".aigluetoolset/lsclaw-target.json"](/Users/echerlos/Downloads/projects/aigluetoolset/.aigluetoolset/lsclaw-target.json)
+- [".aigluetoolset/slices/native-command-bridge-core-v1.json"](/Users/echerlos/Downloads/projects/aigluetoolset/.aigluetoolset/slices/native-command-bridge-core-v1.json)
+
+Operational rule:
+
+- keep `planPath` injected from the `lsclaw` caller side
+- keep `targetProjectPath`, `verifyCommands`, and frozen slice scope owned by the target repo
+- start with single-repo `/api/tasks/run` before any `hub-lite` parent/child rollout

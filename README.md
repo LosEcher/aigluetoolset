@@ -99,6 +99,11 @@ The first repo-side orchestration packages are:
 - [packages/lsclaw-target-contract](/Users/echerlos/Downloads/projects/aigluetoolset/packages/lsclaw-target-contract)
 - [packages/lsclaw-target-cli](/Users/echerlos/Downloads/projects/aigluetoolset/packages/lsclaw-target-cli)
 
+Repo-local target contract is now checked in under:
+
+- [".aigluetoolset/lsclaw-target.json"](/Users/echerlos/Downloads/projects/aigluetoolset/.aigluetoolset/lsclaw-target.json)
+- [".aigluetoolset/slices/native-command-bridge-core-v1.json"](/Users/echerlos/Downloads/projects/aigluetoolset/.aigluetoolset/slices/native-command-bridge-core-v1.json)
+
 The first `cantool` extraction package is:
 
 - [packages/palette-core](/Users/echerlos/Downloads/projects/aigluetoolset/packages/palette-core)

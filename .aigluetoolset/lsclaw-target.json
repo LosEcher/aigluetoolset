@@ -1,0 +1,48 @@
+{
+  "schema": "aigluetoolset.lsclaw-target.v1",
+  "repoId": "aigluetoolset",
+  "defaultPlanId": "kimi-implement-codex-review",
+  "targetProjectPath": "/Users/echerlos/Downloads/projects/aigluetoolset",
+  "defaultDispatchMode": "queue",
+  "defaultTaskMode": "team",
+  "defaultAgentName": "codex",
+  "verify": {
+    "defaultCommands": [
+      "pnpm build",
+      "pnpm typecheck",
+      "pnpm test"
+    ]
+  },
+  "slices": {
+    "text-block-v0": {
+      "title": "text-block v0",
+      "path": ".aigluetoolset/slices/text-block-v0.json",
+      "allowedScope": [
+        "packages/text-block-core/src",
+        "packages/text-block-predictor/src",
+        "packages/react-text-block/src",
+        "docs"
+      ],
+      "verifyCommands": [
+        "pnpm build",
+        "pnpm typecheck",
+        "pnpm test"
+      ]
+    },
+    "native-command-bridge-core-v1": {
+      "title": "native command bridge core v1",
+      "path": ".aigluetoolset/slices/native-command-bridge-core-v1.json",
+      "allowedScope": [
+        "packages/native-command-bridge-core/src",
+        "packages/native-command-bridge-core/test",
+        "examples/native-command-bridge-demo",
+        "docs"
+      ],
+      "verifyCommands": [
+        "pnpm build",
+        "pnpm typecheck",
+        "pnpm test"
+      ]
+    }
+  }
+}

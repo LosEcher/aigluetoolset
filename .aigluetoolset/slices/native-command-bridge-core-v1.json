@@ -1,0 +1,33 @@
+{
+  "schema": "aigluetoolset.lsclaw-slice.v1",
+  "sliceId": "native-command-bridge-core-v1",
+  "repoId": "aigluetoolset",
+  "title": "native command bridge core v1",
+  "objective": "Refine native-command-bridge-core without widening into tauri-specific adapters, React hooks, or cantool product glue.",
+  "allowedScope": [
+    "packages/native-command-bridge-core/src",
+    "packages/native-command-bridge-core/test",
+    "examples/native-command-bridge-demo",
+    "docs"
+  ],
+  "verifyCommands": [
+    "pnpm build",
+    "pnpm typecheck",
+    "pnpm test"
+  ],
+  "expectedArtifacts": [
+    "package source changes",
+    "updated docs if public contract changes"
+  ],
+  "nonGoals": [
+    "caret / selection / hit-testing",
+    "SSR fidelity",
+    "cross-repo adoption work"
+  ],
+  "stopConditions": [
+    "Do not widen into sibling runtime/tooling packages.",
+    "Stop and report if the requested work requires changing the frozen scope."
+  ],
+  "reviewOwner": "codex",
+  "targetProjectPath": "/Users/echerlos/Downloads/projects/aigluetoolset"
+}
